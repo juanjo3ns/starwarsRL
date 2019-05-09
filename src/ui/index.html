@@ -16,31 +16,55 @@
 	<body>
 		<script>
 
-			var inputx =90;
+			var inputx =45;
 			var inputy=45;
 
+			// Scene
 			var scene = new THREE.Scene();
-			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+			scene.background = new THREE.Color( 'white' );
 
+			// Camera
+			var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			// Renderer
 			var renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
-			var geometry = new THREE.BoxGeometry( 2, 1, 1 );
-			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+
+			// Lighting
+			var spotLight = new THREE.SpotLight( 0xFFFFFF, 2);
+			spotLight.position.set( 200, 250, 600 );
+			spotLight.target.position.set( 100, -50, 0 );
+			spotLight.castShadow = true;
+			scene.add( spotLight.target );
+			scene.add( spotLight );
+			//Set up shadow properties for the spotLight
+			spotLight.shadow.mapSize.width = 512; // default
+			spotLight.shadow.mapSize.height = 512; // default
+			spotLight.shadow.camera.near = 0.5; // default
+			spotLight.shadow.camera.far = 15000; // default
+
+
+			//Sphere 1
+			var geometry = new THREE.SphereGeometry( 10, 64, 64 );
+			var material = new THREE.MeshPhongMaterial( { color: 0x0087E6, shininess: 100 } );
 			var cube = new THREE.Mesh( geometry, material );
 			scene.add( cube );
 
-			var geometry2 = new THREE.BoxGeometry( 5, 0.5, 0.5 );
-			var material2 = new THREE.MeshBasicMaterial( { color: 'red' } );
+			//Cube 2
+			var geometry2 = new THREE.BoxGeometry( 30, 5, 5 );
+			var material2 = new THREE.MeshPhongMaterial( { color: 'red', shininess: 100 } );
 			var cube2 = new THREE.Mesh( geometry2, material2 );
-			cube2.rotation.x = inputx / 2 * Math.PI ;
-			cube2.rotation.y = inputy / 2 * Math.PI ;
+			cube2.position.set(5,0,0)
+			// Rotation
+			cube2.rotation.z = inputx ;
+			cube2.rotation.y = inputy ;
 			scene.add( cube2 );
 
-			camera.position.x = 1;
+			camera.position.x = 0;
 			camera.position.y = 1;
-			camera.position.z = 5;
+			camera.position.z = 100;
 
 			renderer.render( scene, camera );
 		</script>
