@@ -1,0 +1,16 @@
+numpy==1.15.4
+ipython==7.2.0
+torch
+torchvision
+opencv-python==3.4.4.19
+requests
+numba
+matplotlib
+tensorflow
+tensorboard-logger
+seaborn
+keras
+imageio
+pandas
+Flask
+tqdm

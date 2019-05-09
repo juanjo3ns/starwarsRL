@@ -1,0 +1,24 @@
+version: '2.3'
+
+services:
+
+  starwars:
+    image: starwars
+    container_name: starwars
+    working_dir: /data
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+
+    environment:
+      - PYTHONPATH=/data
+      # - DISPLAY=unix$DISPLAY
+    ports:
+      - 6008:6006
+    volumes:
+      - ../:/data
+      # - ../../GAMES_GIFS/:/gifs
+      # - /tmp/.X11-unix:/tmp/.X11-unix
+
+    runtime: nvidia
+    command: tail /dev/null -f
