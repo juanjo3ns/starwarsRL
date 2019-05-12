@@ -5,6 +5,7 @@
 
 <script src="http://threejs.org/examples/js/libs/stats.min.js"></script>
 <script src="https://unpkg.com/three@0.85.0/examples/js/controls/OrbitControls.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <head>
 	<title>Star Wars RL</title>
@@ -76,13 +77,28 @@
 		cube2.rotation.y = inputy;
 		scene.add(cube2);
 
-		// Planets
-		for (var i = 1; i < csvData.length; i++) {
-			var planet = new THREE.Mesh(geometry, material);
-			planet.position.set(10*csvData[i][0],10*csvData[i][1], 0)
-			scene.add(planet);
-			
-		}
+		// Planet
+		var geometry = new THREE.SphereGeometry(5, 32,32);
+		var material = new THREE.MeshPhongMaterial({ color: 'green', shininess: 100 });
+		var planet = new THREE.Mesh(geometry, material);
+		planet.position.set(0, 0, 0)
+		scene.add(planet);
+
+		// Move planet depending on CSV
+		var i = 1;
+		$(function () {
+			var intervalID = setInterval(function () {
+
+				planet.position.set(10 * csvData[i][0], 10 * csvData[i][1], 0)
+				i+=1;
+				if(i >= csvData.length){i=1;}
+
+
+			}, 3000);
+			setTimeout(function () {
+				clearInterval(intervalID);
+			}, 18000);
+		});
 
 
 		function init() {
