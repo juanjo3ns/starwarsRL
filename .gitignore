@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Pytorch saved models
+*.pt
+
+# Tensorboard events
+*/tensorboard/
+
 # C extensions
 *.so
 
