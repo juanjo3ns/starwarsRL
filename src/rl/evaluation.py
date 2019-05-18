@@ -5,16 +5,13 @@ import numpy as np
 from time import sleep
 from IPython import embed
 from src.rl.General.Board import Board
-from src.rl.General.NN import Q
+from src.rl.General.NN import QNet
 from src.utils.writecsv import CSV
 
 path = 'weights/'
 assert len(sys.argv)>1, "Introduce model version"
 assert os.path.exists(os.path.join(path,sys.argv[1])),"Path doesn't exist"
 vpath = os.path.join(path, sys.argv[1])
-
-''' WRITE ALL STEPS AND TERMINAL STATES INTO THE CSV '''
-csv = CSV("coords1")
 
 
 ''' We'll be able to evaluate just one iteration of model's weights, or
@@ -26,8 +23,8 @@ else:
 	iterations = os.listdir(vpath)
 	iterations.sort(key=lambda x: int(x.split('.')[0]))
 print(iterations)
-board = Board(0)
-Q = Q(board)
+board = Board()
+Q = QNet(board)
 
 def eval_step(q_fn, state):
 	board_state = torch.from_numpy(board.getEnvironment(state).astype(np.float32)).type(dtype)
@@ -35,32 +32,39 @@ def eval_step(q_fn, state):
 	return board.actions[q_values.max(1)[1][0]]
 
 for it in iterations:
+
+	''' WRITE ALL STEPS AND TERMINAL STATES INTO THE CSV '''
+	csv = CSV("coords_{}".format(it.split('.')[0]))
+
 	weights = torch.load(os.path.join(vpath, it))
 	Q.load_state_dict(weights)
 	dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 	Q = Q.type(dtype)
 
-	num_episodes = 200
+	num_episodes = 100
 	lost = 0
 	mvs = []
 	rwr = []
 
 	for i in range(num_episodes):
 		initState = board.resetInitRandomly()
-		csv.write(initState,board.terminalState[0])
+		csv.write(initState,board.terminalStates[0])
 		done = False
 		while not done:
 			# board.printBoard(initState)
 			action = eval_step(Q,initState)
 
 			reward, nextState, done = board.takeAction(initState, action)
-			csv.write(nextState,board.terminalState[0])
+			csv.write(nextState,board.terminalStates[0])
 			initState = nextState
 			if board.movements > board.maxSteps:
 				lost += 1
 				break
 		mvs.append(board.movements)
 		rwr.append(board.totalreward)
+
+	csv.close()
+
 	avg_mvs = sum(mvs)/num_episodes
 	avg_rwr = sum(rwr)/num_episodes
 	message = "ITERATION: {}\nVICTORIES: {}\nDEFEATS: {}\nAVERAGE REWARD: {}\nAVERAGE MOVEMENTS: {}".format(it,(num_episodes-lost), lost, avg_rwr, avg_mvs)

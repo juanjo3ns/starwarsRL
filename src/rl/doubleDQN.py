@@ -132,7 +132,7 @@ for it in tqdm(range(board.numIterations)):
 		target_Q.load_state_dict(Q.state_dict())
 	if it %100==0:
 		eval(Q)
-		torch.save(Q.state_dict(), 'weights/{}.pt'.format(it))
+		torch.save(Q.state_dict(), 'weights/{}/{}.pt'.format(it))
 	if it > board.start_learning and it % board.learning_freq == 0:
 		if len(board.loss_list)==0:
 			avg_loss = last_loss

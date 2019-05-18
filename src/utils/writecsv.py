@@ -1,10 +1,13 @@
 import csv
+import os
+
+path = '/data/src/csvdata/'
 
 
 class CSV:
 	def __init__(self,file):
 		self.file = file
-		self.csvfile = open(self.file + '.csv', 'w')
+		self.csvfile = open(os.path.join(path, self.file + '.csv'), 'w')
 		self.csvwriter = csv.writer(self.csvfile, delimiter=',')
 
 	def write(self, c1, c2):
