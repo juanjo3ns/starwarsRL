@@ -33,7 +33,7 @@
 				objLoader.load('../../models/deathstar.obj', (event) => {
 					const root = event.detail.loaderRootNode;
 					root.scale.set(3, 3, 3);
-			
+
 		init();
 		animate();
 
@@ -44,7 +44,7 @@
 			var fontMaterial = new THREE.MeshPhongMaterial({ color: (20, 40, 80), specular: (20, 40, 80), shininess: 30 });
 			var text3d = new THREE.TextGeometry('Star Wars RL...lol', {
 				font: font,
-				size: 6,
+				size: 9,
 				height: 1,
 				curveSegments: 2,
 				bevelEnabled: true,
@@ -53,9 +53,9 @@
 				bevelSegments: 1
 			});
 			var title3D = new THREE.Mesh(text3d, fontMaterial);
-			title3D.position.x = -30;
-			title3D.position.y = 20;
-			title3D.position.z = 20;
+			title3D.position.x = -50;
+			title3D.position.y = 0;
+			title3D.position.z = 50;
 			scene.add(title3D);
 		});
 
@@ -75,7 +75,7 @@
 		for (var i = 0; i < jsonObject.length; i++) {
 			csvData.push(jsonObject[i].split(','));
 		}
-	
+
 
 		// Lighting
 		var spotLight = new THREE.SpotLight(0xFFFFFF, 2);
@@ -91,12 +91,12 @@
 
 
 		//Sphere 1
-		var geometry = new THREE.SphereGeometry(15, 64, 64);
-		var material = new THREE.MeshPhongMaterial({ color: 0x0087E6, shininess: 100 });
-		var sphere = new THREE.Mesh(geometry, material);
+		// var geometry = new THREE.SphereGeometry(15, 64, 64);
+		// var material = new THREE.MeshPhongMaterial({ color: 0x0087E6, shininess: 100 });
+		// var sphere = new THREE.Mesh(geometry, material);
 
 		// Cylinder
-		var geometry = new THREE.CylinderGeometry(0.1, 0.3, 500, 64);
+		var geometry = new THREE.CylinderGeometry(0.1, 0.3, 50, 64);
 		var material = new THREE.MeshBasicMaterial({ color: 0x8E8E8E });
 		var cylinder = new THREE.Mesh(geometry, material);
 
@@ -108,6 +108,7 @@
 		var planet = new THREE.Mesh(geometry, material);
 		scene.add(planet);
 
+		cylinder.position.y = 25
 		planet.position.y = 40;
 		scene.add(root);
 		root.add(cylinder);
@@ -140,7 +141,7 @@
 
 
 
-			}, 2000);
+			}, 500);
 			setTimeout(function () {
 				clearInterval(intervalID);
 			}, 1000000);

@@ -5,7 +5,9 @@ path = '/data/src/csvdata/'
 
 
 class CSV:
-	def __init__(self,file):
+	def __init__(self,file,folder):
+		if not os.path.exists(os.path.join(path,folder)):
+			os.mkdir(os.path.join(path,folder))
 		self.file = file
 		self.csvfile = open(os.path.join(path, self.file + '.csv'), 'w')
 		self.csvwriter = csv.writer(self.csvfile, delimiter=',')

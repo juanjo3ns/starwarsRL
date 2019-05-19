@@ -11,27 +11,27 @@ def getEnv(i, gridSize):
 		0: {
 			"lava": ([[i, 2] for i in range(4,gridSize)],[[i, 6] for i in range(0,gridSize-4)]),
 			"initState": (0,gridSize-1),
-			"terminalState": [[gridSize-1,0]]
+			"terminalState": (gridSize-1,0)
 		},
 		1: {
 			"lava": ([[i, 4] for i in range(4,gridSize)],[[i, 5] for i in range(4,gridSize)]),
 			"initState": (gridSize-1, gridSize-1),
-			"terminalState": [[gridSize-1,0]]
+			"terminalState": (0,gridSize-1)
 		},
 		2: {
 			"lava": ([[[i, 4] for i in range(4,gridSize-1)]]),
 			"initState": (int((gridSize-1)/2),gridSize-1),
-			"terminalState": [[int((gridSize-1)/2),0]]
+			"terminalState": (int((gridSize-1)/2),0)
 		},
 		3: {
 			"lava": ([[[i, 4] for i in range(0,gridSize-1)]]),
 			"initState": (int((gridSize-1)/2),gridSize-1),
-			"terminalState": [[int((gridSize-1)/2),0]]
+			"terminalState": (int((gridSize-1)/2),0)
 		},
 		4: {
-			"lava": ([[[0,gridSize-1]]]),
+			"lava": None,
 			"initState" : (gridSize-1,gridSize-1),
-			"terminalState": [[int((gridSize-1)/2),0]]
+			"terminalState": (int((gridSize-1)/2),0)
 		}
 	}
 	return environments[i]

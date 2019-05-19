@@ -34,7 +34,7 @@ def eval_step(q_fn, state):
 for it in iterations:
 
 	''' WRITE ALL STEPS AND TERMINAL STATES INTO THE CSV '''
-	csv = CSV("coords_{}".format(it.split('.')[0]))
+	csv = CSV("coords_{}".format(it.split('.')[0]), sys.argv[1])
 
 	weights = torch.load(os.path.join(vpath, it))
 	Q.load_state_dict(weights)

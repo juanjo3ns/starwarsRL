@@ -10,6 +10,7 @@ from src.rl.General.Buffer import Buffer
 from src.rl.General.Board import Board
 from src.rl.General.NN import QNet
 
+alg = "dqn2"
 
 manualSeed = 123123
 np.random.seed(manualSeed)
@@ -43,8 +44,8 @@ target_Q = target_Q.type(dtype)
 optimizer = torch.optim.Adam(Q.parameters(), lr=board.alpha_nn)
 loss_fn = torch.nn.MSELoss()
 
-path_out = "/data/src/rl/tensorboard/"
-configure(path_out, flush_secs=5)
+path_out = "/data/src/rl/tensorboard/" + alg
+# configure(path_out, flush_secs=5)
 
 
 def eval(q_fn):
@@ -132,7 +133,7 @@ for it in tqdm(range(board.numIterations)):
 		target_Q.load_state_dict(Q.state_dict())
 	if it %100==0:
 		eval(Q)
-		torch.save(Q.state_dict(), 'weights/{}/{}.pt'.format(it))
+		torch.save(Q.state_dict(), 'weights/{}/{}.pt'.format(alg,it))
 	if it > board.start_learning and it % board.learning_freq == 0:
 		if len(board.loss_list)==0:
 			avg_loss = last_loss
@@ -140,6 +141,6 @@ for it in tqdm(range(board.numIterations)):
 			avg_loss = sum(board.loss_list)/len(board.loss_list)
 		last_loss = avg_loss
 		board.loss_list.clear()
-		log_value("Loss", avg_loss, it)
-	log_value("Total_reward", board.totalreward, it)
-	log_value("Movements", board.movements, it)
+	# 	log_value("Loss", avg_loss, it)
+	# log_value("Total_reward", board.totalreward, it)
+	# log_value("Movements", board.movements, it)
