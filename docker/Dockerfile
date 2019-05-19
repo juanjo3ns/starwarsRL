@@ -7,6 +7,8 @@ RUN apt update -y; apt install -y \
 	python3 \
 	python3-pip
 
+RUN pip3 install --upgrade pip
+
 
 ADD docker/requirements.txt .
 RUN pip3 install -r requirements.txt

@@ -9,6 +9,7 @@
 <script src="https://threejsfundamentals.org/threejs/resources/threejs/r103/js/loaders/LoaderSupport.js"></script>
 <script src="https://threejsfundamentals.org/threejs/resources/threejs/r103/js/loaders/OBJLoader2.js"></script>
 <script src="https://threejsfundamentals.org/threejs/resources/threejs/r103/js/loaders/MTLLoader.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/Tween.min.js"></script> -->
 
 <head>
 	<title>Star Wars RL</title>
@@ -45,7 +46,7 @@
 			csvData.push(jsonObject[i].split(','));
 		}
 
-		{
+
   //   const objLoader = new THREE.OBJLoader2();
   //   objLoader.loadMtl('../../models/deathstar.mtl', null, (materials) => {
   //     objLoader.setMaterials(materials);
@@ -55,7 +56,7 @@
   //       scene.add(root);
   //     });
 	// });
-  }
+
 
 		// Lighting
 		var spotLight = new THREE.SpotLight(0xFFFFFF, 2);
@@ -89,7 +90,6 @@
 		var planet = new THREE.Mesh(geometry, material);
 		scene.add(planet);
 
-
 		cylinder.position.y = 29;
 		planet.position.y = 40;
 		sphere.add(cylinder);
@@ -113,8 +113,8 @@
 				// sphere.rotation.z += 0.01;
 				sphere.rotation.x = agent_c[0];
 				sphere.rotation.z = agent_c[1];
-
-
+				// console.log(csvData[i][0],agent_c[0]);
+				// console.log(csvData[i][1],agent_c[1]);
 
 
 				i+=1;
@@ -122,7 +122,7 @@
 
 
 
-			}, 1000);
+			}, 2000);
 			setTimeout(function () {
 				clearInterval(intervalID);
 			}, 1000000);
@@ -132,11 +132,10 @@
 			return Math.random() * (max - min) + min;
 		}
 
-		function computeRotationXYZ(sx,sy) {
+		function computeRotationXYZ(sx,sz) {
 			x = (sx*2*Math.PI)/grid_size;
-			y = (sy*2*Math.PI)/grid_size;
-			z = 15;
-			return [x,y,z];
+			z = (sz*2*Math.PI)/grid_size;
+			return [x,z];
 		}
 
 
@@ -166,6 +165,7 @@
 		function animate() {
 			controls.update();
 			requestAnimationFrame(animate);
+			// TWEEN.update();
 			renderer.render(scene, camera);
 		}
 	</script>
