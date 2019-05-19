@@ -31,6 +31,30 @@
 		init();
 		animate();
 
+		//3D title
+		var fontLoader = new THREE.FontLoader();
+
+		fontLoader.load( 'https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function ( font ) {
+  		var fontMaterial = new THREE.MeshPhongMaterial( { color: (20,40,80), specular: (20,40,80), shininess: 30 } );
+  			var text3d = new THREE.TextGeometry( 'Star Wars RL...lol', {
+				font: font,
+				size: 6,
+				height: 1,
+				curveSegments: 2,
+				bevelEnabled: true,
+				bevelThickness: 1,
+				bevelSize: 1,
+				bevelSegments: 1
+			} );
+  			var title3D = new THREE.Mesh( text3d, fontMaterial );
+			title3D.position.x = -30;
+			title3D.position.y = 20;
+			title3D.position.z = 20;
+			scene.add(title3D);
+		} );
+
+
+
 		// google-chrome --allow-file-access-from-files &
 
 		// Load CSV data
@@ -46,17 +70,17 @@
 			csvData.push(jsonObject[i].split(','));
 		}
 
-
-  //   const objLoader = new THREE.OBJLoader2();
-  //   objLoader.loadMtl('../../models/deathstar.mtl', null, (materials) => {
-  //     objLoader.setMaterials(materials);
-  //     objLoader.load('../../models/deathstar.obj', (event) => {
-  //       const root = event.detail.loaderRootNode;
-	// 	root.scale.set(0.1,0.1,0.1);
-  //       scene.add(root);
-  //     });
-	// });
-
+		{
+    const objLoader = new THREE.OBJLoader2();
+    objLoader.loadMtl('../../models/deathstar.mtl', null, (materials) => {
+      objLoader.setMaterials(materials);
+      objLoader.load('../../models/deathstar.obj', (event) => {
+        const root = event.detail.loaderRootNode;
+		root.scale.set(0.1,0.1,0.1);
+        scene.add(root);
+      });
+	});
+  }
 
 		// Lighting
 		var spotLight = new THREE.SpotLight(0xFFFFFF, 2);
