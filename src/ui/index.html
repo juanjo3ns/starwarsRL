@@ -46,15 +46,15 @@
 		}
 
 		{
-    const objLoader = new THREE.OBJLoader2();
-    objLoader.loadMtl('../../models/deathstar.mtl', null, (materials) => {
-      objLoader.setMaterials(materials);
-      objLoader.load('../../models/deathstar.obj', (event) => {
-        const root = event.detail.loaderRootNode;
-		root.scale.set(0.1,0.1,0.1);
-        scene.add(root);
-      });
-	});
+  //   const objLoader = new THREE.OBJLoader2();
+  //   objLoader.loadMtl('../../models/deathstar.mtl', null, (materials) => {
+  //     objLoader.setMaterials(materials);
+  //     objLoader.load('../../models/deathstar.obj', (event) => {
+  //       const root = event.detail.loaderRootNode;
+	// 	root.scale.set(0.1,0.1,0.1);
+  //       scene.add(root);
+  //     });
+	// });
   }
 
 		// Lighting
@@ -71,57 +71,73 @@
 
 
 		//Sphere 1
-		var geometry = new THREE.SphereGeometry(10, 64, 64);
+		var geometry = new THREE.SphereGeometry(15, 64, 64);
 		var material = new THREE.MeshPhongMaterial({ color: 0x0087E6, shininess: 100 });
-		var cube = new THREE.Mesh(geometry, material);
-		scene.add(cube);
+		var sphere = new THREE.Mesh(geometry, material);
+		scene.add(sphere);
 
-		//Cube 2
-		var geometry2 = new THREE.BoxGeometry(30, 5, 5);
-		var material2 = new THREE.MeshPhongMaterial({ color: 'red', shininess: 100 });
-		var cube2 = new THREE.Mesh(geometry2, material2);
-		cube2.position.set(5, 0, 0)
+		// Cylinder
+		var geometry = new THREE.CylinderGeometry( 1, 3, 30, 64 );
+		var material = new THREE.MeshBasicMaterial( {color: 0x8E8E8E} );
+		var cylinder = new THREE.Mesh( geometry, material );
 
-		// Rotation
-		cube2.rotation.z = 1;
-		cube2.rotation.y = 1;
-		scene.add(cube2);
+
 
 		// Planet
 		var geometry = new THREE.SphereGeometry(5, 32,32);
-		var material = new THREE.MeshPhongMaterial({ color: 'green', shininess: 100 });
+		var material = new THREE.MeshPhongMaterial({ color: 0x00FF4D, shininess: 100 });
 		var planet = new THREE.Mesh(geometry, material);
-		planet.position.set(0, 0, 0)
 		scene.add(planet);
 
 
+		cylinder.position.y = 29;
+		planet.position.y = 40;
+		sphere.add(cylinder);
+
+
 		var rand_y_max = 100;
-		var grid_size = 35;
+		var grid_size = 9;
 
 		// Move planet depending on CSV
-		var i = 1;
+		var i = 0;
 		$(function () {
 			var intervalID = setInterval(function () {
 
-				var rand_y = Math.floor(Math.random() * Math.floor(rand_y_max));
-				var final_x = 20*(csvData[i][0]-(grid_size/2))/grid_size;
-				var final_z = 20*(csvData[i][1]-(grid_size/2))/grid_size;
-				var pred_x = csvData[i][2];
-				var pred_z = csvData[i][3];
+				if ((csvData[i][0] == csvData[i][2]) && (csvData[i][1] == csvData[i][3])){
+					planet.material.color.setHex(0xFF0000);
+				}else{
+					planet.material.color.setHex(0x00FF4D);
+				}
 
-				planet.position.set(final_x, rand_y, final_z);
+				agent_c = computeRotationXYZ(csvData[i][0], csvData[i][1]);
+				// sphere.rotation.z += 0.01;
+				sphere.rotation.x = agent_c[0];
+				sphere.rotation.z = agent_c[1];
 
-				cube2.rotation.set(csvData[i][2],csvData[i][3], 0)
+
+
+
 				i+=1;
 				if(i >= csvData.length){i=1;}
 
 
 
-			}, 500);
+			}, 1000);
 			setTimeout(function () {
 				clearInterval(intervalID);
 			}, 1000000);
 		});
+
+		function getRandom(min, max) {
+			return Math.random() * (max - min) + min;
+		}
+
+		function computeRotationXYZ(sx,sy) {
+			x = (sx*2*Math.PI)/grid_size;
+			y = (sy*2*Math.PI)/grid_size;
+			z = 15;
+			return [x,y,z];
+		}
 
 
 		function init() {
