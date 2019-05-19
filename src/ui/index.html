@@ -47,13 +47,14 @@
 
 		{
     const objLoader = new THREE.OBJLoader2();
-    objLoader.loadMtl('../../models/death-star-II.mtl', null, (materials) => {
+    objLoader.loadMtl('../../models/deathstar.mtl', null, (materials) => {
       objLoader.setMaterials(materials);
-      objLoader.load('../../models/death-star-II.obj', (event) => {
+      objLoader.load('../../models/deathstar.obj', (event) => {
         const root = event.detail.loaderRootNode;
+		root.scale.set(0.1,0.1,0.1);
         scene.add(root);
       });
-    });
+	});
   }
 
 		// Lighting
