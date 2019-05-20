@@ -101,17 +101,28 @@
 		var cylinder = new THREE.Mesh(geometry, material);
 
 
-
-		// Planet
-		var geometry = new THREE.SphereGeometry(5, 32, 32);
-		var material = new THREE.MeshPhongMaterial({ color: 0x00FF4D, shininess: 100 });
-		var planet = new THREE.Mesh(geometry, material);
-		scene.add(planet);
-
 		cylinder.position.y = 25
-		planet.position.y = 40;
 		scene.add(root);
 		root.add(cylinder);
+		root.name = "deathstar"
+
+
+		// parent
+		parent = new THREE.Object3D();
+		scene.add( parent );
+
+		// pivots
+		var pivot = new THREE.Object3D();
+		pivot.rotation.z = 0;
+		parent.add( pivot );
+
+		// planet
+		var geometry = new THREE.SphereGeometry(5, 32, 32);
+		var material = new THREE.MeshPhongMaterial({ color: 0x00FF4D, shininess: 100 });
+		var planet = new THREE.Mesh( geometry, material );
+		planet.position.y = 40;
+		pivot.add( planet );
+	
 
 
 		var rand_y_max = 100;
@@ -124,16 +135,24 @@
 
 				if ((csvData[i][0] == csvData[i][2]) && (csvData[i][1] == csvData[i][3])) {
 					planet.material.color.setHex(0xFF0000);
+					scene.getObjectByName("deathstar").children[1].visible=true;
 				} else {
 					planet.material.color.setHex(0x00FF4D);
+					if (Math.random() > 0.7) {
+						scene.getObjectByName("deathstar").children[1].visible=true;
+					} else{
+						scene.getObjectByName("deathstar").children[1].visible=false;
+					}
 				}
 
+
 				agent_c = computeRotationXYZ(csvData[i][0], csvData[i][1]);
-				// sphere.rotation.z += 0.01;
 				root.rotation.x = agent_c[0];
 				root.rotation.z = agent_c[1];
-				// console.log(csvData[i][0],agent_c[0]);
-				// console.log(csvData[i][1],agent_c[1]);
+
+				terminal_c = computeRotationXYZ(csvData[i][2], csvData[i][3]);
+				parent.rotation.x = terminal_c[0];
+				parent.rotation.z = terminal_c[1];
 
 
 				i += 1;
