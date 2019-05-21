@@ -27,9 +27,9 @@ class Board:
 		self.alpha = 0.1
 		self.alpha_nn = 0.0001
 		self.epsilon = 0.1
-		self.numIterations = 2000
+		self.numIterations = 20000
 		self.changeIteration = 2500
-		self.maxSteps = 500
+		self.maxSteps = 50
 		self.plotStep = 50
 
 		self.actions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
@@ -85,25 +85,18 @@ class Board:
 		# Initialize initState to terminal state to make sure we enter the while
 		initState = self.terminalState
 		while initState == self.terminalState:
-			initState[0] = random.randint(0, self.gridSize-1)
-			initState[1] = random.randint(0, self.gridSize-1)
+			initState = (random.randint(0, self.gridSize-1),random.randint(0, self.gridSize-1))
 		return tuple(initState)
 
 	def resetTerminalRandomly(self):
-		self.terminalState[0] = random.randint(0, self.gridSize-1)
-		self.terminalState[1] = random.randint(0, self.gridSize-1)
-		print("Terminal state random", self.terminalState)
-		return self.terminalState
+		self.terminalState = (random.randint(0, self.gridSize-1),random.randint(0, self.gridSize-1))
 
 	def setLava(self, exp):
 		cells = []
-		if getEnv(exp, self.gridSize)["lava"] is None:
-			self.lava = []
-		else:
-			for lava_group in getEnv(exp, self.gridSize)["lava"]:
-				for l in lava_group:
-					cells.append(l)
-			self.lava = cells
+		for lava_group in getEnv(exp, self.gridSize)["lava"]:
+			for l in lava_group:
+				cells.append(l)
+		self.lava = cells
 
 	def takeAction(self, state, action):
 		nextState = np.array(state) + np.array(action)
