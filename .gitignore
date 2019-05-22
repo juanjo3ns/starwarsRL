@@ -10,7 +10,7 @@ __pycache__/
 *.csv
 
 # Tensorboard events
-*/tensorboard/
+tensorboard/
 
 # C extensions
 *.so

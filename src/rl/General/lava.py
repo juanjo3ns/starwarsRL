@@ -29,7 +29,7 @@ def getEnv(i, gridSize):
 			"terminalState": (int((gridSize-1)/2),0)
 		},
 		4: {
-			"lava": None,
+			"lava": ([[]]),
 			"initState" : (gridSize-1,gridSize-1),
 			"terminalState": (int((gridSize-1)/2),0)
 		}

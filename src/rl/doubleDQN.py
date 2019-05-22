@@ -1,3 +1,4 @@
+import sys
 import os
 import numpy as np
 from tqdm import tqdm
@@ -10,7 +11,10 @@ from src.rl.General.Buffer import Buffer
 from src.rl.General.Board import Board
 from src.rl.General.NN import QNet
 
-alg = "dqn2"
+alg = "dqn6"
+
+if not os.path.exists(os.path.join('weights', alg)):
+	os.mkdir(os.path.join('weights', alg))
 
 manualSeed = 123123
 np.random.seed(manualSeed)
@@ -23,9 +27,9 @@ torch.backends.cudnn.enabled = False
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 
-epsilon_scheduled = np.linspace(0.3,0.0001,2000)
+epsilon_scheduled = np.linspace(0.5,0.0001,20000)
 
-board = Board(epsilon_scheduled,algorithm='double-dqn')
+board = Board(epsilon_scheduled=epsilon_scheduled, board_size=5,algorithm='double-dqn')
 buffer = Buffer(size=200000, batch_size=board.batch_size)
 '''
 Load two Q functions approximators (neural networks)
@@ -35,17 +39,22 @@ Load two Q functions approximators (neural networks)
 '''
 Q = QNet(board)
 target_Q = QNet(board)
+
 dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 atype = torch.cuda.LongTensor if torch.cuda.is_available() else torch.LongTensor
 Q = Q.type(dtype)
 target_Q = target_Q.type(dtype)
+
+# assert len(sys.argv)>1, "Add num epoch of model you want to load. Ex: 1900"
+# Q.load_state_dict(torch.load("weights/dqn1/{}.pt".format(sys.argv[1])))
+# target_Q.load_state_dict(torch.load("weights/dqn1/{}.pt".format(sys.argv[1])))
 
 # Optimizer
 optimizer = torch.optim.Adam(Q.parameters(), lr=board.alpha_nn)
 loss_fn = torch.nn.MSELoss()
 
 path_out = "/data/src/rl/tensorboard/" + alg
-# configure(path_out, flush_secs=5)
+configure(path_out, flush_secs=5)
 
 
 def eval(q_fn):
@@ -63,6 +72,7 @@ def eval(q_fn):
 # ITERATION'S LOOP
 for it in tqdm(range(board.numIterations)):
 
+	board.resetTerminalRandomly()
 	initState = board.resetInitRandomly()
 
 	# If we set up an experiment change, it will change the lava cells to check
@@ -85,14 +95,13 @@ for it in tqdm(range(board.numIterations)):
 			action = board.actions[np.random.choice(range(len(board.actions)))]
 		reward, nextState, done = board.takeAction(initState, action)
 		buffer.store((initState, board.actions.index(action), nextState, reward, 0 if done else 1))
-
 		initState = nextState
 		board.count[nextState]+=1
 		if board.movements > board.maxSteps:
 			break
 
 	if it > board.start_learning and it % board.learning_freq == 0:
-		for x in range(300):
+		for x in range(400):
 			Q.train()
 			sample_data = buffer.sample()
 			state_batch = torch.from_numpy(np.array([board.getEnvironment(x).astype(np.float32) for x in sample_data['state']])).type(dtype)
@@ -141,6 +150,6 @@ for it in tqdm(range(board.numIterations)):
 			avg_loss = sum(board.loss_list)/len(board.loss_list)
 		last_loss = avg_loss
 		board.loss_list.clear()
-	# 	log_value("Loss", avg_loss, it)
-	# log_value("Total_reward", board.totalreward, it)
-	# log_value("Movements", board.movements, it)
+		log_value("Loss", avg_loss, it)
+	log_value("Total_reward", board.totalreward, it)
+	log_value("Movements", board.movements, it)

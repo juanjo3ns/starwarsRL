@@ -14,7 +14,7 @@ services:
       - PYTHONPATH=/data
       # - DISPLAY=unix$DISPLAY
     ports:
-      - 6008:6006
+      - 6006:6006
     volumes:
       - ../:/data
       # - ../../GAMES_GIFS/:/gifs
