@@ -7,7 +7,7 @@ __pycache__/
 *.pt
 
 # CSV files
-*.csv
+#*.csv
 
 # Tensorboard events
 tensorboard/

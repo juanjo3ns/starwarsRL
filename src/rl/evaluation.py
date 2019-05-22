@@ -41,21 +41,21 @@ for it in iterations:
 	dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 	Q = Q.type(dtype)
 
-	num_episodes = 100
+	num_episodes = 50
 	lost = 0
 	mvs = []
 	rwr = []
+	total_coords = []
 
 	for i in range(num_episodes):
 		initState = board.resetInitRandomly()
-		csv.write(initState,board.terminalStates[0])
+		total_coords.append([initState,board.terminalState])
 		done = False
 		while not done:
 			# board.printBoard(initState)
 			action = eval_step(Q,initState)
-
 			reward, nextState, done = board.takeAction(initState, action)
-			csv.write(nextState,board.terminalStates[0])
+			total_coords.append([nextState,board.terminalState])
 			initState = nextState
 			if board.movements > board.maxSteps:
 				lost += 1
@@ -63,9 +63,12 @@ for it in iterations:
 		mvs.append(board.movements)
 		rwr.append(board.totalreward)
 
-	csv.close()
-
 	avg_mvs = sum(mvs)/num_episodes
 	avg_rwr = sum(rwr)/num_episodes
 	message = "ITERATION: {}\nVICTORIES: {}\nDEFEATS: {}\nAVERAGE REWARD: {}\nAVERAGE MOVEMENTS: {}".format(it,(num_episodes-lost), lost, avg_rwr, avg_mvs)
 	print(message)
+
+	csv.write([it.split('.')[0],(num_episodes-lost)/num_episodes*100],[round(avg_rwr,2),avg_mvs])
+	for st in total_coords:
+		csv.write(st[0],st[1])
+	csv.close()

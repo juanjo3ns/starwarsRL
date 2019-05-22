@@ -7,15 +7,22 @@ class QNet(nn.Module):
 	def __init__(self, board):
 		super(QNet, self).__init__()
 
-		self.fc1 = nn.Linear(2 * board.gridSize * board.gridSize,
+		self.fc1 = nn.Linear(3 * board.gridSize * board.gridSize,
 							 5 * board.gridSize * board.gridSize)
 		self.fc2 = nn.Linear(5 * board.gridSize * board.gridSize,
-							 7 * board.gridSize * board.gridSize)
-		self.fc3 = nn.Linear(7 * board.gridSize * board.gridSize,
 							 5 * board.gridSize * board.gridSize)
-		self.fc4 = nn.Linear(5 * board.gridSize * board.gridSize,
+		self.fc3 = nn.Linear(5 * board.gridSize * board.gridSize,
 							 2 * board.gridSize * board.gridSize)
-		self.fc5 = nn.Linear(2 * board.gridSize * board.gridSize, len(board.actions))
+		self.fc4 = nn.Linear(2 * board.gridSize * board.gridSize, len(board.actions))
+		# self.fc1 = nn.Linear(2 * board.gridSize * board.gridSize,
+		# 					 5 * board.gridSize * board.gridSize)
+		# self.fc2 = nn.Linear(5 * board.gridSize * board.gridSize,
+		# 					 7 * board.gridSize * board.gridSize)
+		# self.fc3 = nn.Linear(7 * board.gridSize * board.gridSize,
+		# 					 5 * board.gridSize * board.gridSize)
+		# self.fc4 = nn.Linear(5 * board.gridSize * board.gridSize,
+		# 					 2 * board.gridSize * board.gridSize)
+		# self.fc5 = nn.Linear(2 * board.gridSize * board.gridSize, len(board.actions))
 
 	def predict(self, x):
 		(_, C, H, W) = x.data.size()
@@ -23,8 +30,7 @@ class QNet(nn.Module):
 		x = F.relu(self.fc1(x))
 		x = F.relu(self.fc2(x))
 		x = F.relu(self.fc3(x))
-		x = F.relu(self.fc4(x))
-		return self.fc5(x)
+		return self.fc4(x)
 
 class VNet(nn.Module):
 	def __init__(self, board):

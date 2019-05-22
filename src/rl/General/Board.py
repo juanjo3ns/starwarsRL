@@ -146,9 +146,10 @@ class Board:
 
 	def getEnvironment(self, state):
 		agent = self.getAgent(state)
-		# lava = self.getLava()
+		lava = self.getLava()
 		terminalStates = self.getTerminalState()
-		return np.stack((agent, terminalStates))
+
+		return np.stack((agent,lava, terminalStates))
 
 	def printBoard(self, state):
 		board = np.zeros((self.gridSize, self.gridSize))
