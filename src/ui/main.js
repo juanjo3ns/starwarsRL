@@ -51,41 +51,6 @@
 		console.log(csv_files);
 
 
-		// Creation of 20 cubes and text to select which epoch to load
-		var meshes = new Array();
-		var cube = new THREE.BoxGeometry( 3, 3, 3 );
-		var materials = new THREE.MeshBasicMaterial({color: 0x00ff00});
-		for (var i = 0; i < num_files; i++) {
-			meshes.push(new THREE.Mesh( cube, materials));
-			scene.add(meshes[i]);
-			meshes[i].position.x = -50;
-			meshes[i].position.y = -i* 5;
-			meshes[i].position.z = 120;
-			meshes[i].addEventListener( 'click', changeEpoch(i*100) , false );
-		}
-		function changeEpoch(i){
-			console.log("Load " + i.toString() + " epoch");
-		}
-
-		var geometry_text = new Array();
-		var meshes_text = new Array();
-
-		var material1 = new THREE.MeshPhongMaterial({ color: 'green', specular: (20, 40, 80), shininess: 30 });
-		var fontLoader = new THREE.FontLoader();
-		fontLoader.load('https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function (font) {
-			for(var i=0; i< num_files; i++) {
-				geometry_text.push(new THREE.TextGeometry('Epoch--> '.concat((i*100).toString()), {font: font,size: 3,height: 1,curveSegments: 2,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelSegments: 1}));
-				meshes_text.push(new THREE.Mesh(geometry_text[i], material1));
-				scene.add(meshes_text[i]);
-				meshes_text[i].position.x = -45;
-				meshes_text[i].position.y = -i* 5 -1;
-				meshes_text[i].position.z = 120;
-		}
-		});
-
-
-
-
 		var url = "data.csv";
 		var request = new XMLHttpRequest();
 		request.open("GET", url, false);
