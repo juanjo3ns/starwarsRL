@@ -68,6 +68,34 @@ class PolicyNet(nn.Module):
 		x = F.relu(self.fc3(x))
 		return F.softmax(self.fc4(x), dim=1)
 
+class DuelingNet(nn.Module):
+	def __init__(self, board):
+		super(DuelingNet, self).__init__()
+		self.feature = nn.Sequential(
+			nn.Linear(2 * board.gridSize * board.gridSize,
+					 5 * board.gridSize * board.gridSize),
+			nn.ReLU()
+		)
+
+		self.advantage = nn.Sequential(
+			nn.Linear(5 * board.gridSize * board.gridSize, 128),
+			nn.ReLU(),
+			nn.Linear(128, len(board.actions))
+		)
+
+		self.value = nn.Sequential(
+			nn.Linear(5 * board.gridSize * board.gridSize, 128),
+			nn.ReLU(),
+			nn.Linear(128, 1)
+		)
+	def predict(self, x):
+		(_, C, H, W) = x.data.size()
+		x = x.view(-1, C * H * W)
+		x = self.feature(x)
+		advantage = self.advantage(x)
+		value = self.value(x)
+		return value + advantage  - advantage.mean()
+
 
 # from Board import Board
 # from random import randint

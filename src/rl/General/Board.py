@@ -27,7 +27,7 @@ class Board:
 		self.alpha = 0.1
 		self.alpha_nn = 0.0001
 		self.epsilon = 0.1
-		self.numIterations = 20000
+		self.numIterations = 30000
 		self.changeIteration = 2500
 		self.maxSteps = 50
 		self.plotStep = 50

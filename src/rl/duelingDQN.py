@@ -6,16 +6,13 @@ import random
 from IPython import embed
 from tensorboard_logger import configure, log_value, log_histogram
 import torch
-from src.General.Buffer import Buffer
-from src.General.Board import Board
-from src.General.NN import DuelingNet
-from src.utils.sendTelegram import send
+from src.rl.General.Buffer import Buffer
+from src.rl.General.Board import Board
+from src.rl.General.NN import DuelingNet
+from torch.optim.lr_scheduler import ReduceLROnPlateau, StepLR
 
-'''
-MAIN CHANGES IN VERSION: 4.6.0
- - First attempt (Includes DoubleDQN)
+alg = "dueling-dqn2"
 
-'''
 
 manualSeed = 123123
 np.random.seed(manualSeed)
@@ -30,10 +27,10 @@ torch.backends.cudnn.deterministic = True
 
 # epsilon_scheduled = np.linspace(0.3,0.0001,2000)
 import math
-epsilon_scheduled = lambda index: 0.0001 + (0.3 - 0.0001) * math.exp(-1. * index / 500)
+epsilon_scheduled = lambda index: 0.00001 + (0.4 - 0.00001) * math.exp(-1. * index / 500)
 
 
-board = Board(epsilon_scheduled=epsilon_scheduled,algorithm='dueling-ddqn')
+board = Board(epsilon_scheduled=epsilon_scheduled,board_size=5,	algorithm='dueling-ddqn')
 buffer = Buffer(size=200000, batch_size=board.batch_size)
 '''
 Load two Q functions approximators (neural networks)
@@ -49,17 +46,18 @@ Q = Q.type(dtype)
 target_Q = target_Q.type(dtype)
 
 # Optimizer
-optimizer = torch.optim.Adam(Q.parameters(), lr=board.alpha_nn)
+optimizer = torch.optim.Adam(Q.parameters(), lr=0.1)
 loss_fn = torch.nn.MSELoss()
+scheduler = StepLR(optimizer, step_size=3000, gamma=0.1)
 
-path_out = "/data/src/tensorboard/DQN/" + board.version
+path_out = "/data/src/rl/tensorboard/" + alg
 configure(path_out, flush_secs=5)
 
 #Folder to store weights, if it doesn't exists create it
-if not os.path.exists('model/'):
-	os.mkdir('model/')
-if not os.path.exists(os.path.join('model', board.version)):
-	os.mkdir(os.path.join('model', board.version))
+if not os.path.exists('weights/'):
+	os.mkdir('weights/')
+if not os.path.exists(os.path.join('weights', alg)):
+	os.mkdir(os.path.join('weights', alg))
 
 def eval(q_fn):
 	actions_legend = {0:"^",1:">",2:"v",3:"<"}
@@ -76,6 +74,7 @@ def eval(q_fn):
 # ITERATION'S LOOP
 for it in tqdm(range(board.numIterations)):
 
+	board.resetTerminalRandomly()
 	initState = board.resetInitRandomly()
 
 	# If we set up an experiment change, it will change the lava cells to check
@@ -105,7 +104,7 @@ for it in tqdm(range(board.numIterations)):
 			break
 
 	if it > board.start_learning and it % board.learning_freq == 0:
-		for i in range(300):
+		for i in range(400):
 			Q.train()
 			sample_data = buffer.sample()
 			state_batch = torch.from_numpy(np.array([board.getEnvironment(x).astype(np.float32) for x in sample_data['state']])).type(dtype)
@@ -141,13 +140,12 @@ for it in tqdm(range(board.numIterations)):
 
 
 
-
+	scheduler.step()
 	if it % board.target_update_freq == 0 and it > board.start_learning:
 		target_Q.load_state_dict(Q.state_dict())
 	if it %100==0:
 		eval(Q)
-		# send("Iteration number {}".format(it))
-		torch.save(Q.state_dict(), 'model/{}/{}.pt'.format(board.version, it))
+		torch.save(Q.state_dict(), 'weights/{}/{}.pt'.format(alg, it))
 	if it > board.start_learning and it % board.learning_freq == 0:
 		if len(board.loss_list)==0:
 			avg_loss = last_loss
@@ -158,8 +156,6 @@ for it in tqdm(range(board.numIterations)):
 		log_value("Loss", avg_loss, it)
 	log_value("Total_reward", board.totalreward, it)
 	log_value("Movements", board.movements, it)
-	if it % board.plotStep==0:
-		board.plotValues(it, board.Q)
-		board.plotHeatmap(it)
-
-board.generateGIF(board.heatmap_path)
+	for param_group in optimizer.param_groups:
+		lr = param_group['lr']
+	log_value("LR", lr, it)

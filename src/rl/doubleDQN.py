@@ -10,8 +10,9 @@ import torch
 from src.rl.General.Buffer import Buffer
 from src.rl.General.Board import Board
 from src.rl.General.NN import QNet
+from torch.optim.lr_scheduler import ReduceLROnPlateau, StepLR
 
-alg = "dqn6"
+alg = "dqn7"
 
 if not os.path.exists(os.path.join('weights', alg)):
 	os.mkdir(os.path.join('weights', alg))
@@ -50,8 +51,9 @@ target_Q = target_Q.type(dtype)
 # target_Q.load_state_dict(torch.load("weights/dqn1/{}.pt".format(sys.argv[1])))
 
 # Optimizer
-optimizer = torch.optim.Adam(Q.parameters(), lr=board.alpha_nn)
+optimizer = torch.optim.Adam(Q.parameters(), lr=0.1)
 loss_fn = torch.nn.MSELoss()
+scheduler = StepLR(optimizer, step_size=3000, gamma=0.1)
 
 path_out = "/data/src/rl/tensorboard/" + alg
 configure(path_out, flush_secs=5)
@@ -137,7 +139,7 @@ for it in tqdm(range(board.numIterations)):
 
 
 
-
+	scheduler.step()
 	if it % board.target_update_freq == 0 and it > board.start_learning:
 		target_Q.load_state_dict(Q.state_dict())
 	if it %100==0:
@@ -153,3 +155,6 @@ for it in tqdm(range(board.numIterations)):
 		log_value("Loss", avg_loss, it)
 	log_value("Total_reward", board.totalreward, it)
 	log_value("Movements", board.movements, it)
+	for param_group in optimizer.param_groups:
+		lr = param_group['lr']
+	log_value("LR", lr, it)
