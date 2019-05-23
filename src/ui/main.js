@@ -1,12 +1,3 @@
-	//
-	// const testFolder = '/home/juanjo/Documents/starwars-RL/src/csvdata/dqn1';
-	// const fs = require('fs');
-	//
-	// fs.readdir(testFolder, (err, files) => {
-	//   files.forEach(file => {
-	//     console.log(file);
-	//   });
-	// });
 		const objLoader = new THREE.OBJLoader2();
 			objLoader.loadMtl('../../models/deathstar.mtl', null, (materials) => {
 				objLoader.setMaterials(materials);
@@ -14,6 +5,8 @@
 					const root = event.detail.loaderRootNode;
 					root.scale.set(3, 3, 3);
 
+		var velocity = new THREE.Vector3();
+		var prevTime = performance.now();
 		init();
 		animate();
 
@@ -22,19 +15,12 @@
 
 		fontLoader.load('https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function (font) {
 			var fontMaterial = new THREE.MeshPhongMaterial({ color: (20, 40, 80), specular: (20, 40, 80), shininess: 30 });
-			var fontMaterial1 = new THREE.MeshPhongMaterial({ color: 'green', specular: (20, 40, 80), shininess: 30 });
 			var text3d = new THREE.TextGeometry('Training_the_Death_Star', {font: font,size: 6,height: 1,curveSegments: 2,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelSegments: 1});
-			var epochs_text = new THREE.TextGeometry('Choose_evaluation:', {font: font,size: 4,height: 1,curveSegments: 2,bevelEnabled: true,bevelThickness: 1,bevelSize: 1,bevelSegments: 1});
 			var title3D = new THREE.Mesh(text3d, fontMaterial);
-			var epoch3D = new THREE.Mesh(epochs_text, fontMaterial1);
 			title3D.position.x = -50;
 			title3D.position.y = 30;
 			title3D.position.z = 120;
-			epoch3D.position.x = -50;
-			epoch3D.position.y = 12;
-			epoch3D.position.z = 120;
 			scene.add(title3D);
-			scene.add(epoch3D);
 		});
 
 
@@ -61,6 +47,31 @@
 		for (var i = 0; i < jsonObject.length; i++) {
 			csvData.push(jsonObject[i].split(','));
 		}
+
+		var fontLoader = new THREE.FontLoader();
+		fontLoader.load('https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function (font) {
+			var fontMaterial = new THREE.MeshPhongMaterial({ color: 'black'});
+			var t1 = new THREE.TextGeometry('Stats', {font: font,size: 4,height: 1,curveSegments: 2});
+			var t2 = new THREE.TextGeometry('Epoch-->'.concat(csvData[0][0]), {font: font,size: 3,height: 1,curveSegments: 2});
+			var t3 = new THREE.TextGeometry('Accuracy-->'.concat(csvData[0][1]), {font: font,size: 3,height: 1,curveSegments: 2});
+			var t4 = new THREE.TextGeometry('Average_steps-->'.concat(csvData[0][2]), {font: font,size: 3,height: 1,curveSegments: 2});
+			var t5 = new THREE.TextGeometry('Average_reward-->'.concat(csvData[0][3]), {font: font,size: 3,height: 1,curveSegments: 2});
+			var tm1 = new THREE.Mesh(t1, fontMaterial);
+			var tm2 = new THREE.Mesh(t2, fontMaterial);
+			var tm3 = new THREE.Mesh(t3, fontMaterial);
+			var tm4 = new THREE.Mesh(t4, fontMaterial);
+			var tm5 = new THREE.Mesh(t5, fontMaterial);
+			tm1.position.x = -50;tm1.position.y = 40;tm1.position.z = -120;
+			tm2.position.x = -50;tm2.position.y = 35;tm2.position.z = -120;
+			tm3.position.x = -50;tm3.position.y = 30;tm3.position.z = -120;
+			tm4.position.x = -50;tm4.position.y = 25;tm4.position.z = -120;
+			tm5.position.x = -50;tm5.position.y = 20;tm5.position.z = -120;
+			scene.add(tm1);
+			scene.add(tm2);
+			scene.add(tm3);
+			scene.add(tm4);
+			scene.add(tm5);
+		});
 
 
 		// Lighting
@@ -128,7 +139,7 @@
 		var grid_size = 9;
 
 		// Move planet depending on CSV
-		var i = 0;
+		var i = 1;
 		var init = false;
 		$(function () {
 			var intervalID = setInterval(function () {
@@ -188,6 +199,7 @@
 			renderer = new THREE.WebGLRenderer({ antialias: true });
 			var width = window.innerWidth;
 			var height = window.innerHeight;
+
 			renderer.setSize(width, height);
 			document.body.appendChild(renderer.domElement);
 
@@ -197,21 +209,36 @@
 			camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
 			camera.position.x = 0;
 			camera.position.y = 10;
-			camera.position.z = 100;
+			camera.position.z = 400;
 			camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 			controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-			var gridXZ = new THREE.GridHelper(100, 10);
-			scene.add(gridXZ);
-
 		}
+		function render() {
+			renderer.render(scene, camera);
+			var time = performance.now();
+      var delta = 1/( time - prevTime );
+			if (delta < 0.0006){
+				delta = 0;
+			}
+			velocity.z = -2000*delta;
+			velocity.x = -1000*delta;
+			velocity.y = 1000*delta;
+			camera.translateZ( velocity.z );
+			camera.translateX( velocity.x );
+			camera.translateY( velocity.y );
+			// prevTime = time;
+			}
+
+
 
 		function animate() {
 			controls.update();
 			requestAnimationFrame(animate);
 			// TWEEN.update();
-			renderer.render(scene, camera);
+
+			render()
+			// renderer.render(scene, camera);
 		}
 	});
 			});
