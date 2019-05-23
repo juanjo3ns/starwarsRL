@@ -12,7 +12,7 @@ from src.rl.General.Board import Board
 from src.rl.General.NN import QNet
 from torch.optim.lr_scheduler import ReduceLROnPlateau, StepLR
 
-alg = "dqn7"
+alg = "dqn8"
 
 if not os.path.exists(os.path.join('weights', alg)):
 	os.mkdir(os.path.join('weights', alg))
@@ -28,7 +28,9 @@ torch.backends.cudnn.enabled = False
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 
-epsilon_scheduled = np.linspace(0.5,0.0001,20000)
+# epsilon_scheduled = np.linspace(0.5,0.0001,20000)
+import math
+epsilon_scheduled = lambda index: 0.00001 + (0.5 - 0.00001) * math.exp(-1. * index / 2000)
 
 board = Board(epsilon_scheduled=epsilon_scheduled, board_size=5,algorithm='double-dqn')
 buffer = Buffer(size=200000, batch_size=board.batch_size)
@@ -53,7 +55,11 @@ target_Q = target_Q.type(dtype)
 # Optimizer
 optimizer = torch.optim.Adam(Q.parameters(), lr=0.1)
 loss_fn = torch.nn.MSELoss()
-scheduler = StepLR(optimizer, step_size=3000, gamma=0.1)
+# scheduler = StepLR(optimizer, step_size=3000, gamma=0.1)
+# scheduler = ReduceLROnPlateau(optimizer,
+# 							'min',
+# 							patience=200,
+# 							verbose=True)
 
 path_out = "/data/src/rl/tensorboard/" + alg
 configure(path_out, flush_secs=5)
@@ -84,7 +90,7 @@ for it in tqdm(range(board.numIterations)):
 	done = False
 	while not done:
 		if it > board.start_learning:
-			if random.random() > board.epsilon_scheduled[it]:
+			if random.random() > board.epsilon_scheduled(it):
 				with torch.no_grad():
 					Q.eval()
 					board_state = torch.from_numpy(board.getEnvironment(initState).astype(np.float32)).type(dtype)
@@ -139,7 +145,6 @@ for it in tqdm(range(board.numIterations)):
 
 
 
-	scheduler.step()
 	if it % board.target_update_freq == 0 and it > board.start_learning:
 		target_Q.load_state_dict(Q.state_dict())
 	if it %100==0:
@@ -153,8 +158,10 @@ for it in tqdm(range(board.numIterations)):
 		last_loss = avg_loss
 		board.loss_list.clear()
 		log_value("Loss", avg_loss, it)
+		# scheduler.step(avg_loss)
+
 	log_value("Total_reward", board.totalreward, it)
 	log_value("Movements", board.movements, it)
-	for param_group in optimizer.param_groups:
-		lr = param_group['lr']
-	log_value("LR", lr, it)
+	# for param_group in optimizer.param_groups:
+	# 	lr = param_group['lr']
+	# log_value("LR", lr, it)

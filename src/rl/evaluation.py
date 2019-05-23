@@ -5,7 +5,7 @@ import numpy as np
 from time import sleep
 from IPython import embed
 from src.rl.General.Board import Board
-from src.rl.General.NN import QNet
+from src.rl.General.NN import QNet, DuelingNet
 from src.utils.writecsv import CSV
 
 path = 'weights/'
@@ -24,7 +24,10 @@ else:
 	iterations.sort(key=lambda x: int(x.split('.')[0]))
 print(iterations)
 board = Board()
-Q = QNet(board)
+if 'dueling' in sys.argv[1]:
+	Q = DuelingNet(board)
+else:
+	Q = QNet(board)
 
 def eval_step(q_fn, state):
 	board_state = torch.from_numpy(board.getEnvironment(state).astype(np.float32)).type(dtype)
