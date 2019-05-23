@@ -131,7 +131,7 @@
 
 
 		    // Lighting
-		    var spotLight = new THREE.SpotLight(0xFFFFFF, 2);
+		    var spotLight = new THREE.SpotLight(0xFFFFFF, 0.1);
 		    spotLight.position.set(200, 250, 600);
 		    spotLight.target.position.set(100, -50, 0);
 		    spotLight.castShadow = true;
@@ -139,8 +139,14 @@
 		    scene.add(spotLight);
 		    spotLight.shadow.mapSize.width = 512; // default
 		    spotLight.shadow.mapSize.height = 512; // default
-		    spotLight.shadow.camera.near = 0.5; // default
-		    spotLight.shadow.camera.far = 15000; // default
+		    spotLight.shadow.camera.near = 100; // default
+				spotLight.shadow.camera.far = 200; // default
+				
+				var ambient_light = new THREE.AmbientLight( 0x404040, 5 ); // soft white light
+				scene.add( ambient_light );
+
+				// Background
+				
 
 
 		    //Sphere 1
