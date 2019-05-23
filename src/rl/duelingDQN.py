@@ -9,9 +9,8 @@ import torch
 from src.rl.General.Buffer import Buffer
 from src.rl.General.Board import Board
 from src.rl.General.NN import DuelingNet
-from torch.optim.lr_scheduler import ReduceLROnPlateau, StepLR
 
-alg = "dueling-dqn3"
+alg = "dueling-dqn4"
 
 
 manualSeed = 123123
@@ -30,7 +29,7 @@ import math
 epsilon_scheduled = lambda index: 0.00001 + (0.5 - 0.00001) * math.exp(-1. * index / 2000)
 
 
-board = Board(epsilon_scheduled=epsilon_scheduled,board_size=5,	algorithm='dueling-ddqn')
+board = Board(epsilon_scheduled=epsilon_scheduled,board_size=5,algorithm='dueling-ddqn')
 buffer = Buffer(size=200000, batch_size=board.batch_size)
 '''
 Load two Q functions approximators (neural networks)
@@ -46,7 +45,7 @@ Q = Q.type(dtype)
 target_Q = target_Q.type(dtype)
 
 # Optimizer
-optimizer = torch.optim.Adam(Q.parameters(), lr=0.1)
+optimizer = torch.optim.Adam(Q.parameters(), lr=0.0001)
 loss_fn = torch.nn.MSELoss()
 # scheduler = StepLR(optimizer, step_size=3000, gamma=0.1)
 # scheduler = ReduceLROnPlateau(optimizer,
@@ -108,7 +107,7 @@ for it in tqdm(range(board.numIterations)):
 			break
 
 	if it > board.start_learning and it % board.learning_freq == 0:
-		for i in range(400):
+		for i in range(300):
 			Q.train()
 			sample_data = buffer.sample()
 			state_batch = torch.from_numpy(np.array([board.getEnvironment(x).astype(np.float32) for x in sample_data['state']])).type(dtype)
@@ -146,7 +145,7 @@ for it in tqdm(range(board.numIterations)):
 
 	if it % board.target_update_freq == 0 and it > board.start_learning:
 		target_Q.load_state_dict(Q.state_dict())
-	if it %100==0:
+	if it %200==0:
 		eval(Q)
 		torch.save(Q.state_dict(), 'weights/{}/{}.pt'.format(alg, it))
 	if it > board.start_learning and it % board.learning_freq == 0:

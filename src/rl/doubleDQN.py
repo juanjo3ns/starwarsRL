@@ -12,7 +12,7 @@ from src.rl.General.Board import Board
 from src.rl.General.NN import QNet
 from torch.optim.lr_scheduler import ReduceLROnPlateau, StepLR
 
-alg = "dqn8"
+alg = "dqn9"
 
 if not os.path.exists(os.path.join('weights', alg)):
 	os.mkdir(os.path.join('weights', alg))
@@ -53,7 +53,7 @@ target_Q = target_Q.type(dtype)
 # target_Q.load_state_dict(torch.load("weights/dqn1/{}.pt".format(sys.argv[1])))
 
 # Optimizer
-optimizer = torch.optim.Adam(Q.parameters(), lr=0.1)
+optimizer = torch.optim.Adam(Q.parameters(), lr=0.0001)
 loss_fn = torch.nn.MSELoss()
 # scheduler = StepLR(optimizer, step_size=3000, gamma=0.1)
 # scheduler = ReduceLROnPlateau(optimizer,
