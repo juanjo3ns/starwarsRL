@@ -58,11 +58,11 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
     // google-chrome --allow-file-access-from-files &
 
     // Load CSV data
-    url = "/home/juanjo/Documents/starwars-RL/src/csvdata/dueling-final/coords_"
+    url = "/home/juanjo/Documents/starwars-RL/src/csvdata/dueling-final2/coords_"
     var csv_files = new Array();
-    var num_files = 20;
+    var num_files = 16;
     for (var i = 0; i < num_files; i++) {
-      csv_files.push(url.concat((i * 100).toString()).concat('.csv'));
+      csv_files.push(url.concat((i * 20).toString()).concat('.csv'));
     }
     // console.log(csv_files);
 
@@ -189,7 +189,7 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
     // var sphere = new THREE.Mesh(geometry, material);
 
     // Cylinder
-    var geometry = new THREE.CylinderGeometry(0.1, 0.1, 12.5, 32);
+    var geometry = new THREE.CylinderGeometry(0.2, 0.2, 12.5, 32);
     var material = new THREE.MeshBasicMaterial({
       color: '#2bef42'
     });
@@ -255,7 +255,7 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
     addStats(csvData);
     var init = false;
     var i = 1;
-    var colors = Array(0x00FF9A, 0xFFCD00, 0x3300FF, 0xFFD2AB);
+    var colors = Array(0x00FF9A, 0x3300FF, 0xFFD2AB);
     var intervalID = setInterval(function() {
 
 
@@ -289,8 +289,12 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
 
 
       i += 1;
-      if (i >= 150) {
+			console.log(csvData[0][1]/100);
+      if (i >= 150*csvData[0][1]/100 + 15) {
         i = 1;
+				if (csv>16){
+					csv = 0;
+				}
         csv += 1;
         var url = csv_files[csv];
         var request = new XMLHttpRequest();
@@ -312,7 +316,7 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
 
 
 
-    }, 100);
+    }, 180);
     setTimeout(function() {
       clearInterval(intervalID);
     }, 1000000);
