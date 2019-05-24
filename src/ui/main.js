@@ -5,36 +5,45 @@
 		    const root = event.detail.loaderRootNode;
 		    root.scale.set(3, 3, 3);
 
+				objLoader.loadMtl('../../models/title.mtl', null, (materials) => {
+					objLoader.setMaterials(materials);
+					objLoader.load('../../models/title.obj', (event) => {
+						const title3D = event.detail.loaderRootNode;
+					// 	title3D.position.x = -50;
+		      // title3D.position.y = 30;
+		      // title3D.position.z = -80;
+						title3D.scale.set(3, 3, 3);
+
 		    var velocity = new THREE.Vector3();
 		    var prevTime = performance.now();
 		    init();
 		    animate();
 
-		    //3D title
-		    var fontLoader = new THREE.FontLoader();
+		    // //3D title
+		    // var fontLoader = new THREE.FontLoader();
 
-		    fontLoader.load('https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function(font) {
-		      var fontMaterial = new THREE.MeshPhongMaterial({
-		        color: 'yellow',
-		        specular: (20, 40, 80),
-		        shininess: 30
-		      });
-		      var text3d = new THREE.TextGeometry('Star-Wars', {
-		        font: font,
-		        size: 10,
-		        height: 1,
-		        curveSegments: 2,
-		        bevelEnabled: true,
-		        bevelThickness: 1,
-		        bevelSize: 1,
-		        bevelSegments: 1
-		      });
-		      var title3D = new THREE.Mesh(text3d, fontMaterial);
-		      title3D.position.x = -50;
-		      title3D.position.y = 30;
-		      title3D.position.z = -80;
-		      scene.add(title3D);
-		    });
+		    // fontLoader.load('https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function(font) {
+		    //   var fontMaterial = new THREE.MeshPhongMaterial({
+		    //     color: 'yellow',
+		    //     specular: (20, 40, 80),
+		    //     shininess: 30
+		    //   });
+		    //   var text3d = new THREE.TextGeometry('Star-Wars', {
+		    //     font: font,
+		    //     size: 10,
+		    //     height: 1,
+		    //     curveSegments: 2,
+		    //     bevelEnabled: true,
+		    //     bevelThickness: 1,
+		    //     bevelSize: 1,
+		    //     bevelSegments: 1
+		    //   });
+		      // var title3D = new THREE.Mesh(text3d, fontMaterial);
+		      // title3D.position.x = -50;
+		      // title3D.position.y = 30;
+		      // title3D.position.z = -80;
+		      // scene.add(title3D);
+		    // });
 
 
 
@@ -55,9 +64,9 @@
 		      var fontLoader = new THREE.FontLoader();
 		      fontLoader.load('https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function(font) {
 		        var fontMaterial = new THREE.MeshPhongMaterial({
-		          color: 'black'
+		          color: 'white'
 		        });
-		        var t1 = new THREE.TextGeometry('Stats', {
+		        var t1 = new THREE.TextGeometry('', {
 		          font: font,
 		          size: 4,
 		          height: 1,
@@ -97,21 +106,21 @@
 						tm3.name = 'tm3';
 						tm4.name = 'tm4';
 						tm5.name = 'tm5';
-		        tm1.position.x = -50;
-		        tm1.position.y = 20;
-		        tm1.position.z = -80;
-		        tm2.position.x = -50;
-		        tm2.position.y = 15;
-		        tm2.position.z = -80;
-		        tm3.position.x = -50;
-		        tm3.position.y = 10;
-		        tm3.position.z = -80;
-		        tm4.position.x = -50;
-		        tm4.position.y = 5;
-		        tm4.position.z = -80;
-		        tm5.position.x = -50;
-		        tm5.position.y = 0;
-		        tm5.position.z = -80;
+		        tm1.position.x = -70;
+		        tm1.position.y = 50;
+		        tm1.position.z = -120;
+		        tm2.position.x = -70;
+		        tm2.position.y = 45;
+		        tm2.position.z = -120;
+		        tm3.position.x = -70;
+		        tm3.position.y = 40;
+		        tm3.position.z = -120;
+		        tm4.position.x = -70;
+		        tm4.position.y = 35;
+		        tm4.position.z = -120;
+		        tm5.position.x = -70;
+		        tm5.position.y = 30;
+		        tm5.position.z = -120;
 		        scene.add(tm1);
 		        scene.add(tm2);
 		        scene.add(tm3);
@@ -131,7 +140,7 @@
 
 
 		    // Lighting
-		    var spotLight = new THREE.SpotLight(0xFFFFFF, 0.1);
+		    var spotLight = new THREE.SpotLight(0x666666, 0.5);
 		    spotLight.position.set(200, 250, 600);
 		    spotLight.target.position.set(100, -50, 0);
 		    spotLight.castShadow = true;
@@ -141,13 +150,29 @@
 		    spotLight.shadow.mapSize.height = 512; // default
 		    spotLight.shadow.camera.near = 100; // default
 				spotLight.shadow.camera.far = 200; // default
+
+				var spothlight2 = new THREE.SpotLight(0xFFFFFF, 0.5);
+		    spothlight2.position.set(200, -250, -600);
+		    spothlight2.target.position.set(100, -50, 0);
+		    spothlight2.castShadow = true;
+		    scene.add(spothlight2.target);
+		    scene.add(spothlight2);
+		    spothlight2.shadow.mapSize.width = 512; // default
+		    spothlight2.shadow.mapSize.height = 512; // default
+		    spothlight2.shadow.camera.near = 100; // default
+				spothlight2.shadow.camera.far = 200; // default
 				
-				var ambient_light = new THREE.AmbientLight( 0x404040, 5 ); // soft white light
+				var ambient_light = new THREE.AmbientLight( 0x404040, 2.2 ); // soft white light
 				scene.add( ambient_light );
 
+				// var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+				// scene.add( directionalLight );
 				// Background
 				
 
+				const loader = new THREE.TextureLoader();
+				const bgTexture = loader.load('stars.jpg');
+				scene.background = bgTexture;
 
 		    //Sphere 1
 		    // var geometry = new THREE.SphereGeometry(15, 64, 64);
@@ -155,14 +180,14 @@
 		    // var sphere = new THREE.Mesh(geometry, material);
 
 		    // Cylinder
-		    var geometry = new THREE.CylinderGeometry(0.2, 0.2, 11, 64);
+		    var geometry = new THREE.CylinderGeometry(0.1, 0.1, 12.5, 32);
 		    var material = new THREE.MeshBasicMaterial({
-		      color: 'red'
+		      color: '#2bef42'
 		    });
 		    var cylinder = new THREE.Mesh(geometry, material);
 
 
-		    cylinder.position.y = 9
+		    cylinder.position.y = 8
 		    scene.add(root);
 		    root.add(cylinder);
 		    root.name = "deathstar"
@@ -307,12 +332,11 @@
 		      document.body.appendChild(renderer.domElement);
 
 		      scene = new THREE.Scene();
-		      scene.background = new THREE.Color('white');
 
 		      camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
 		      camera.position.x = 0;
 		      camera.position.y = 10;
-		      camera.position.z = 400;
+		      camera.position.z = 300;
 		      camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 		      controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -346,3 +370,5 @@
 
 		  });
 		});
+	});
+});
