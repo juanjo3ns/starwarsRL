@@ -58,7 +58,7 @@ objLoader1.loadMtl('models/deathstar.mtl', null, (materials) => {
     // google-chrome --allow-file-access-from-files &
 
     // Load CSV data
-    url = "https://github.com/juanjo3ns/starwars-RL/tree/master/src/csvdata/dueling-final2/coords_"
+    url = "src/csvdata/dueling-final2/coords_"
     var csv_files = new Array();
     var num_files = 16;
     for (var i = 0; i < num_files; i++) {
@@ -180,7 +180,7 @@ objLoader1.loadMtl('models/deathstar.mtl', null, (materials) => {
 
 
     const loader = new THREE.TextureLoader();
-    const bgTexture = loader.load('stars.jpg');
+    const bgTexture = loader.load('src/ui/stars.jpg');
     scene.background = bgTexture;
 
     //Sphere 1
