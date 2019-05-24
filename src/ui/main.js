@@ -310,8 +310,13 @@
 		      camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 		      controls = new THREE.OrbitControls(camera, renderer.domElement);
+					window.addEventListener('resize', onWindowResize, false);
 		    }
-
+				function onWindowResize() {
+				    camera.aspect = window.innerWidth / window.innerHeight;
+				    renderer.setSize(window.innerWidth, window.innerHeight);
+				    camera.updateProjectionMatrix();
+				};
 		    function render() {
 		      renderer.render(scene, camera);
 		      var time = performance.now();
