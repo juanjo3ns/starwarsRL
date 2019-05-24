@@ -1,9 +1,14 @@
+var velocity = new THREE.Vector3();
+var prevTime = performance.now();
+
+
 init();
 animate();
+
 const objLoader = new THREE.OBJLoader2();
-objLoader.loadMtl('../../models/title.mtl', null, (materials) => {
+objLoader.loadMtl('../../models/title_centre.mtl', null, (materials) => {
   objLoader.setMaterials(materials);
-  objLoader.load('../../models/title.obj', (event) => {
+  objLoader.load('../../models/title_centre.obj', (event) => {
     const title3D = event.detail.loaderRootNode;
     title3D.scale.set(3, 3, 3);
     title3D.name = "title3d"
@@ -20,8 +25,6 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
     scene.add(root);
 
 
-    var velocity = new THREE.Vector3();
-    var prevTime = performance.now();
 
 
     // //3D title
@@ -111,20 +114,20 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
         tm3.name = 'tm3';
         tm4.name = 'tm4';
         tm5.name = 'tm5';
-        tm1.position.x = -70;
-        tm1.position.y = 50;
+        tm1.position.x = -120;
+        tm1.position.y = 70;
         tm1.position.z = -120;
-        tm2.position.x = -70;
-        tm2.position.y = 45;
+        tm2.position.x = -120;
+        tm2.position.y = 65;
         tm2.position.z = -120;
-        tm3.position.x = -70;
-        tm3.position.y = 40;
+        tm3.position.x = -120;
+        tm3.position.y = 60;
         tm3.position.z = -120;
-        tm4.position.x = -70;
-        tm4.position.y = 35;
+        tm4.position.x = -120;
+        tm4.position.y = 55;
         tm4.position.z = -120;
-        tm5.position.x = -70;
-        tm5.position.y = 30;
+        tm5.position.x = -120;
+        tm5.position.y = 50;
         tm5.position.z = -120;
         scene.add(tm1);
         scene.add(tm2);
@@ -156,17 +159,17 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
     spotLight.shadow.mapSize.height = 512; // default
     spotLight.shadow.camera.near = 100; // default
     spotLight.shadow.camera.far = 200; // default
-
-    var spothlight2 = new THREE.SpotLight(0xFFFFFF, 0.5);
-    spothlight2.position.set(200, -250, -600);
-    spothlight2.target.position.set(100, -50, 0);
-    spothlight2.castShadow = true;
-    scene.add(spothlight2.target);
-    scene.add(spothlight2);
-    spothlight2.shadow.mapSize.width = 512; // default
-    spothlight2.shadow.mapSize.height = 512; // default
-    spothlight2.shadow.camera.near = 100; // default
-    spothlight2.shadow.camera.far = 200; // default
+		//
+    // var spothlight2 = new THREE.SpotLight(0xFFFFFF, 0.5);
+    // spothlight2.position.set(200, -250, -600);
+    // spothlight2.target.position.set(100, -50, 0);
+    // spothlight2.castShadow = true;
+    // scene.add(spothlight2.target);
+    // scene.add(spothlight2);
+    // spothlight2.shadow.mapSize.width = 512; // default
+    // spothlight2.shadow.mapSize.height = 512; // default
+    // spothlight2.shadow.camera.near = 100; // default
+    // spothlight2.shadow.camera.far = 200; // default
 
     var ambient_light = new THREE.AmbientLight(0x404040, 2.2); // soft white light
     scene.add(ambient_light);
@@ -191,6 +194,7 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
       color: '#2bef42'
     });
     var cylinder = new THREE.Mesh(geometry, material);
+		cylinder.name = "laser"
 
 
     cylinder.position.y = 8;
@@ -257,7 +261,7 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
 
       if ((csvData[i][0] == csvData[i][2]) && (csvData[i][1] == csvData[i][3])) {
         planet.material.color.setHex(0xFF0000);
-        scene.getObjectByName("deathstar").children[1].visible = true;
+        scene.getObjectByName("deathstar").getObjectByName("laser").visible = true;
         init = true;
       } else {
 
@@ -267,7 +271,7 @@ objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
           gparent.rotation.x = Math.PI * 2 * Math.random();
           gparent.rotation.z = Math.PI * 2 * Math.random();
         }
-        scene.getObjectByName("deathstar").children[1].visible = false;
+        scene.getObjectByName("deathstar").getObjectByName("laser").visible = false;
         // if (Math.random() > 0.7) {
         // 	scene.getObjectByName("deathstar").children[1].visible=true;
         // } else{
@@ -340,8 +344,8 @@ function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
   camera.position.x = 0;
-  camera.position.y = 10;
-  camera.position.z = 300;
+  camera.position.y = 0;
+  camera.position.z = 8000;
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -356,15 +360,16 @@ function onWindowResize() {
 
 function render() {
   renderer.render(scene, camera);
-  // var time = performance.now();
-  // var delta = 1 / (time - prevTime);
-  // if (delta < 0.0006) {
-  //   delta = 0;
-  // }
-  // velocity.z = -2000 * delta;
-  // velocity.x = -1000 * delta;
-  // velocity.y = 500 * delta;
-  // camera.translateZ(velocity.z);
+	if (camera.position.z > 150) {
+	  var time = performance.now();
+	  var delta = 1 / (time - prevTime);
+	  if (delta < 0.000006) {
+	    delta = 0;
+	  }
+	  velocity.z = -40000 * delta;
+		camera.translateZ(velocity.z);
+
+	}
   // camera.translateX(velocity.x);
   // camera.translateY(velocity.y);
   // prevTime = time;
