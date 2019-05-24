@@ -6,9 +6,9 @@ init();
 animate();
 
 const objLoader = new THREE.OBJLoader2();
-objLoader.loadMtl('../../models/title_centre.mtl', null, (materials) => {
+objLoader.loadMtl('models/title_centre.mtl', null, (materials) => {
   objLoader.setMaterials(materials);
-  objLoader.load('../../models/title_centre.obj', (event) => {
+  objLoader.load('models/title_centre.obj', (event) => {
     const title3D = event.detail.loaderRootNode;
     title3D.scale.set(3, 3, 3);
     title3D.name = "title3d"
@@ -16,9 +16,9 @@ objLoader.loadMtl('../../models/title_centre.mtl', null, (materials) => {
   });
 });
 const objLoader1 = new THREE.OBJLoader2();
-objLoader1.loadMtl('../../models/deathstar.mtl', null, (materials) => {
+objLoader1.loadMtl('models/deathstar.mtl', null, (materials) => {
   objLoader1.setMaterials(materials);
-  objLoader1.load('../../models/deathstar.obj', (event) => {
+  objLoader1.load('models/deathstar.obj', (event) => {
     const root = event.detail.loaderRootNode;
     root.scale.set(3, 3, 3);
     root.name = "deathstar";
