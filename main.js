@@ -15,16 +15,11 @@ objLoader.loadMtl('models/title_centre.mtl', null, (materials) => {
     scene.add(title3D);
   });
 });
-
-var mtlLoader = new THREE.MTLLoader();
-mtlLoader.setPath( "https://github.com/juanjo3ns/starwars-RL/blob/master/models/" );
-mtlLoader.setResourcePath( 'https://github.com/juanjo3ns/starwars-RL/tree/master/models/model' );
-
-mtlLoader.load( 'deathstar.mtl', function( materials ) {
-  materials.preload();
-  const objLoader1 = new THREE.OBJLoader2();
+const objLoader1 = new THREE.OBJLoader2();
+objLoader1.setPath('https://github.com/juanjo3ns/starwars-RL/tree/master/models')
+objLoader1.loadMtl('deathstar.mtl', null, (materials) => {
   objLoader1.setMaterials(materials);
-  objLoader1.load('models/deathstar.obj', (event) => {
+  objLoader1.load('deathstar.obj', (event) => {
     const root = event.detail.loaderRootNode;
     root.scale.set(3, 3, 3);
     root.name = "deathstar";
