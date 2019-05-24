@@ -27,7 +27,7 @@ class Board:
 		self.alpha = 0.1
 		self.alpha_nn = 0.0001
 		self.epsilon = 0.1
-		self.numIterations = 2000
+		self.numIterations = 600
 		self.changeIteration = 2500
 		self.maxSteps = 50
 		self.plotStep = 50
@@ -104,6 +104,7 @@ class Board:
 		reward = self.rewardSize
 		if -1 in list(nextState) or self.gridSize in list(nextState):
 			nextState = state
+			reward = -0.3
 
 		if list(nextState) in self.lava:
 			reward = self.reward_lava

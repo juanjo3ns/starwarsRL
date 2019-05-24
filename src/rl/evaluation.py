@@ -44,7 +44,8 @@ for it in iterations:
 	dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 	Q = Q.type(dtype)
 
-	num_episodes = 50
+	num_episodes = 100
+	save_episodes = 1
 	lost = 0
 	mvs = []
 	rwr = []
@@ -58,7 +59,8 @@ for it in iterations:
 			# board.printBoard(initState)
 			action = eval_step(Q,initState)
 			reward, nextState, done = board.takeAction(initState, action)
-			total_coords.append([nextState,board.terminalState])
+			if save_episodes > i:
+				total_coords.append([nextState,board.terminalState])
 			initState = nextState
 			if board.movements > board.maxSteps:
 				lost += 1

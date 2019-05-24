@@ -10,7 +10,7 @@ from src.rl.General.Buffer import Buffer
 from src.rl.General.Board import Board
 from src.rl.General.NN import DuelingNet
 
-alg = "dueling-dqn4"
+alg = "dueling-final3"
 
 
 manualSeed = 123123
@@ -26,10 +26,10 @@ torch.backends.cudnn.deterministic = True
 
 # epsilon_scheduled = np.linspace(0.3,0.0001,2000)
 import math
-epsilon_scheduled = lambda index: 0.00001 + (0.5 - 0.00001) * math.exp(-1. * index / 2000)
+epsilon_scheduled = lambda index: 0.0001 + (0.3 - 0.0001) * math.exp(-1. * index / 2000)
 
 
-board = Board(epsilon_scheduled=epsilon_scheduled,board_size=5,algorithm='dueling-ddqn')
+board = Board(epsilon_scheduled=epsilon_scheduled,board_size=10,algorithm='dueling-ddqn')
 buffer = Buffer(size=200000, batch_size=board.batch_size)
 '''
 Load two Q functions approximators (neural networks)
@@ -77,7 +77,7 @@ def eval(q_fn):
 # ITERATION'S LOOP
 for it in tqdm(range(board.numIterations)):
 
-	board.resetTerminalRandomly()
+	# board.resetTerminalRandomly()
 	initState = board.resetInitRandomly()
 
 	# If we set up an experiment change, it will change the lava cells to check
@@ -145,8 +145,8 @@ for it in tqdm(range(board.numIterations)):
 
 	if it % board.target_update_freq == 0 and it > board.start_learning:
 		target_Q.load_state_dict(Q.state_dict())
-	if it %200==0:
-		eval(Q)
+	if it %1==0:
+		# eval(Q)
 		torch.save(Q.state_dict(), 'weights/{}/{}.pt'.format(alg, it))
 	if it > board.start_learning and it % board.learning_freq == 0:
 		if len(board.loss_list)==0:

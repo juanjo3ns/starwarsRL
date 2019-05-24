@@ -12,7 +12,7 @@ from src.rl.General.Board import Board
 from src.rl.General.NN import QNet
 from torch.optim.lr_scheduler import ReduceLROnPlateau, StepLR
 
-alg = "dqn9"
+alg = "double-dqn0"
 
 if not os.path.exists(os.path.join('weights', alg)):
 	os.mkdir(os.path.join('weights', alg))
@@ -30,7 +30,7 @@ torch.backends.cudnn.deterministic = True
 
 # epsilon_scheduled = np.linspace(0.5,0.0001,20000)
 import math
-epsilon_scheduled = lambda index: 0.00001 + (0.5 - 0.00001) * math.exp(-1. * index / 2000)
+epsilon_scheduled = lambda index: 0.0001 + (0.5 - 0.0001) * math.exp(-1. * index / 2000)
 
 board = Board(epsilon_scheduled=epsilon_scheduled, board_size=5,algorithm='double-dqn')
 buffer = Buffer(size=200000, batch_size=board.batch_size)
@@ -109,7 +109,7 @@ for it in tqdm(range(board.numIterations)):
 			break
 
 	if it > board.start_learning and it % board.learning_freq == 0:
-		for x in range(400):
+		for x in range(500):
 			Q.train()
 			sample_data = buffer.sample()
 			state_batch = torch.from_numpy(np.array([board.getEnvironment(x).astype(np.float32) for x in sample_data['state']])).type(dtype)
@@ -147,7 +147,7 @@ for it in tqdm(range(board.numIterations)):
 
 	if it % board.target_update_freq == 0 and it > board.start_learning:
 		target_Q.load_state_dict(Q.state_dict())
-	if it %100==0:
+	if it %200==0:
 		eval(Q)
 		torch.save(Q.state_dict(), 'weights/{}/{}.pt'.format(alg,it))
 	if it > board.start_learning and it % board.learning_freq == 0:
