@@ -6,9 +6,9 @@ init();
 animate();
 
 const objLoader = new THREE.OBJLoader2();
-objLoader.loadMtl('models/title_centre.mtl', null, (materials) => {
+objLoader.loadMtl('https://github.com/juanjo3ns/starwars-RL/tree/master/models/title_centre.mtl', null, (materials) => {
   objLoader.setMaterials(materials);
-  objLoader.load('models/title_centre.obj', (event) => {
+  objLoader.load('https://github.com/juanjo3ns/starwars-RL/tree/master/models/title_centre.obj', (event) => {
     const title3D = event.detail.loaderRootNode;
     title3D.scale.set(3, 3, 3);
     title3D.name = "title3d"
@@ -16,10 +16,10 @@ objLoader.loadMtl('models/title_centre.mtl', null, (materials) => {
   });
 });
 const objLoader1 = new THREE.OBJLoader2();
-objLoader1.setPath('https://github.com/juanjo3ns/starwars-RL/tree/master/models')
-objLoader1.loadMtl('deathstar.mtl', null, (materials) => {
+// objLoader1.setPath('https://github.com/juanjo3ns/starwars-RL/tree/master/models')
+objLoader1.loadMtl('https://github.com/juanjo3ns/starwars-RL/tree/master/models/deathstar.mtl', null, (materials) => {
   objLoader1.setMaterials(materials);
-  objLoader1.load('deathstar.obj', (event) => {
+  objLoader1.load('https://github.com/juanjo3ns/starwars-RL/tree/master/models/deathstar.obj', (event) => {
     const root = event.detail.loaderRootNode;
     root.scale.set(3, 3, 3);
     root.name = "deathstar";
@@ -59,11 +59,11 @@ objLoader1.loadMtl('deathstar.mtl', null, (materials) => {
     // google-chrome --allow-file-access-from-files &
 
     // Load CSV data
-    url = "src/csvdata/dueling-final2/coords_"
+    url = "src/csvdata/dueling-final3/coords_"
     var csv_files = new Array();
-    var num_files = 16;
-    for (var i = 0; i < num_files; i++) {
-      csv_files.push(url.concat((i * 20).toString()).concat('.csv'));
+    var num_files = 200;
+    for (var i = 50; i < num_files; i++) {
+      csv_files.push(url.concat(i.toString()).concat('.csv'));
     }
     // console.log(csv_files);
 
@@ -290,13 +290,12 @@ objLoader1.loadMtl('deathstar.mtl', null, (materials) => {
 
 
       i += 1;
-			console.log(csvData[0][1]/100);
-      if (i >= 150*csvData[0][1]/100 + 15) {
+      if (i >= csvData.length*csvData[0][1]/100) {
         i = 1;
-				if (csv>16){
+				csv += 2;
+				if (csv>=(csv_files.length-2)){
 					csv = 0;
 				}
-        csv += 1;
         var url = csv_files[csv];
         var request = new XMLHttpRequest();
         request.open("GET", url, false);
@@ -311,13 +310,10 @@ objLoader1.loadMtl('deathstar.mtl', null, (materials) => {
         showStats(csvData);
 
       }
-      if (csv >= 19) {
-        csv = 0;
-      }
 
 
 
-    }, 180);
+    }, 100);
     setTimeout(function() {
       clearInterval(intervalID);
     }, 1000000);
