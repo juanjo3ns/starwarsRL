@@ -6,9 +6,9 @@ init();
 animate();
 
 const objLoader = new THREE.OBJLoader2();
-objLoader.loadMtl('https://crossorigin.me/https://github.com/juanjo3ns/starwars-RL/tree/master/models/title_centre.mtl', null, (materials) => {
+objLoader.loadMtl('https://cors.io/?https://github.com/juanjo3ns/starwars-RL/tree/master/models/title_centre.mtl', null, (materials) => {
   objLoader.setMaterials(materials);
-  objLoader.load('https://crossorigin.me/https://github.com/juanjo3ns/starwars-RL/tree/master/models/title_centre.obj', (event) => {
+  objLoader.load('https://cors.io/?https://github.com/juanjo3ns/starwars-RL/tree/master/models/title_centre.obj', (event) => {
     const title3D = event.detail.loaderRootNode;
     title3D.scale.set(3, 3, 3);
     title3D.name = "title3d"
@@ -17,9 +17,9 @@ objLoader.loadMtl('https://crossorigin.me/https://github.com/juanjo3ns/starwars-
 });
 const objLoader1 = new THREE.OBJLoader2();
 // objLoader1.setPath('https://github.com/juanjo3ns/starwars-RL/tree/master/models')
-objLoader1.loadMtl('https://crossorigin.me/https://github.com/juanjo3ns/starwars-RL/tree/master/models/deathstar.mtl', null, (materials) => {
+objLoader1.loadMtl('https://cors.io/?https://github.com/juanjo3ns/starwars-RL/tree/master/models/deathstar.mtl', null, (materials) => {
   objLoader1.setMaterials(materials);
-  objLoader1.load('https://crossorigin.me/https://github.com/juanjo3ns/starwars-RL/tree/master/models/deathstar.obj', (event) => {
+  objLoader1.load('https://cors.io/?https://github.com/juanjo3ns/starwars-RL/tree/master/models/deathstar.obj', (event) => {
     const root = event.detail.loaderRootNode;
     root.scale.set(3, 3, 3);
     root.name = "deathstar";
