@@ -1,4 +1,7 @@
 # Star Wars - Reinforcement Learning - [DEMO](https://juanjo3ns.github.io/starwars-RL/)
+  ![Demo screenshot](https://user-images.githubusercontent.com/16901615/58427541-32fbdb80-80a0-11e9-9c91-bbee5a78d664.png)
+
+
 ##  1. Motivation
 Two months ago @enric1994 and myself @juanjo3ns started learning Reinforcement Learning. To do so, we picked the simplest and most common environment to begin in this topic, the grid world. This simple game is recommended and heavily used by the Sutton and Barto book and the lectures from DeepMind at UCL. 
 
