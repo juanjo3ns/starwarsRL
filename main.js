@@ -7,7 +7,7 @@ animate();
 
 const objLoader = new THREE.OBJLoader2();
 
-  objLoader.load('models/title_centre.obj', (event) => {
+  objLoader.load('https://raw.githubusercontent.com/juanjo3ns/starwars-RL/master/models/title_centre.obj', (event) => {
     const title3D = event.detail.loaderRootNode;
     title3D.scale.set(3, 3, 3);
     title3D.name = "title3d"
@@ -16,7 +16,7 @@ const objLoader = new THREE.OBJLoader2();
 
 });
 const objLoader1 = new THREE.OBJLoader2();
-  objLoader1.load('models/deathstar.obj', (event) => {
+  objLoader1.load('https://raw.githubusercontent.com/juanjo3ns/starwars-RL/master/models/deathstar.obj', (event) => {
     const root = event.detail.loaderRootNode;
     root.scale.set(3, 3, 3);
     root.name = "deathstar";
