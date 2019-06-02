@@ -1,9 +1,11 @@
 # Star Wars - Reinforcement Learning - [DEMO](https://juanjo3ns.github.io/starwars-RL/)
+![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fjuanjo3ns%2Fstarwars-RL)
+
   ![Demo screenshot](https://user-images.githubusercontent.com/16901615/58427541-32fbdb80-80a0-11e9-9c91-bbee5a78d664.png)
 
 
 ##  1. Motivation
-Two months ago @enric1994 and myself @juanjo3ns started learning Reinforcement Learning. To do so, we picked the simplest and most common environment to begin in this topic, the grid world. This simple game is recommended and heavily used by the Sutton and Barto book and the lectures from DeepMind at UCL. 
+Two months ago [@enric1994](https://github.com/enric1994) and myself [@juanjo3ns](https://github.com/juanjo3ns) started learning Reinforcement Learning. To do so, we picked the simplest and most common environment to begin in this topic, the grid world. This simple game is recommended and heavily used by the Sutton and Barto book and the lectures from DeepMind at UCL. 
 
 There are three different types of cells in the board: the init state, the terminal state and the 'lava' state. The Agent has to learn how to go from the init state (which is randomly initialized) to the terminal state, avoiding the 'lava' states since the agent gets a lower reward when it goes through them. After trying many different algorithms and just seeing our results in the terminal and tensorboard, we decided to create a little demo to show in a fancier way what we have learnt. That's how we came up with the idea of mapping the grid world to the death star and show the planets as the terminal states. Althought there's a couple of constraints that we'll explain latter.
 
