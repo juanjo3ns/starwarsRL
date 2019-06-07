@@ -1,5 +1,5 @@
-# Star Wars - Reinforcement Learning - [DEMO](https://juanjo3ns.github.io/starwars-RL/)
-![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fjuanjo3ns%2Fstarwars-RL)
+# Star Wars - Reinforcement Learning - [DEMO](https://juanjo3ns.github.io/starwarsRL/)
+![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fjuanjo3ns%2FstarwarsRL)
 
   ![Demo screenshot](https://user-images.githubusercontent.com/16901615/58427541-32fbdb80-80a0-11e9-9c91-bbee5a78d664.png)
 
