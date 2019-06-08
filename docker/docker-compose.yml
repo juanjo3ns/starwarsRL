@@ -9,16 +9,18 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
-
     environment:
       - PYTHONPATH=/data
-      # - DISPLAY=unix$DISPLAY
-    ports:
-      - 6006:6006
     volumes:
       - ../:/data
-      # - ../../GAMES_GIFS/:/gifs
-      # - /tmp/.X11-unix:/tmp/.X11-unix
-
     runtime: nvidia
     command: tail /dev/null -f
+  tensorboard:
+    image: tensorflow/tensorflow
+    container_name: tensorboard
+    working_dir: /logs
+    ports:
+     - "6006:6006"
+    volumes:
+      - ../src/rl/tensorboard:/logs
+    command: tensorboard --logdir /logs
