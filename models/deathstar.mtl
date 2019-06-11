@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd model/_1_-_Default1.JPG
+map_Kd _1_-_Default1.JPG
 
 newmtl _2_-_Default1
 Ns 96.078431
@@ -31,7 +31,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd model/_3_-_Default1.JPG
+map_Kd _3_-_Default1.JPG
 
 newmtl _7_-_Default1
 Ns 96.078431
@@ -42,7 +42,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd model/_7_-_Default1.JPG
+map_Kd _7_-_Default1.JPG
 
 newmtl _8_-_Default1
 Ns 96.078431
@@ -53,7 +53,7 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd model/_8_-_Default1.JPG
+map_Kd _8_-_Default1.JPG
 
 newmtl _8_-_Default1_0
 Ns 96.078431
@@ -64,4 +64,4 @@ Ke 0.000000 0.000000 0.000000
 Ni -1.000000
 d 1.000000
 illum 2
-map_Kd model/_8_-_Default1_0.JPG
+map_Kd _8_-_Default1_0.JPG
